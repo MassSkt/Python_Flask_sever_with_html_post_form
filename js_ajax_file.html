@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HTMLファイルからPOSTでJSONデータを送信する</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+    function file_upload(){
+        $("#response").html("Response Values");
+
+
+        // フォームデータを取得
+        //var formdata = new FormData($('#my_form').get(0));
+        var fileOb = $("#fileField")[0].files[0];
+        var formdata = new FormData();
+        formdata.append("picfile", fileOb);
+
+        alert(formdata);
+
+        // urlの取得
+        var url = $("#url_post").val();
+
+        // POSTでアップロード
+        $.ajax({
+            url  : url,
+            type : "POST",
+            data : formdata,
+            cache       : false,
+            contentType : false,
+            processData : false,
+            dataType    : "html"
+        })
+        .done(function(data, textStatus, jqXHR){
+            // Success
+            alert(data);
+            $("#response").html(JSON.stringify(data));
+        })
+        .fail(function(jqXHR, textStatus, errorThrown){
+            alert("fail");
+            $("#response").html(JSON.stringify(data));
+        });
+    }
+</script>
+
+</head>
+<body>
+    <h2>Send JSON data by POST from HTML</h2>
+    <p>URL: <input type="text" id="url_post" name="url" size="100" value="http://testurl/"></p>
+    <form id="my_form">
+        <input type="file" id="fileField" name="fileField">
+        <button type="button" onclick="file_upload()">アップロード</button>
+    </form>
+    <textarea id="response" cols=120 rows=10 disabled></textarea>
+</body>
+</html>
